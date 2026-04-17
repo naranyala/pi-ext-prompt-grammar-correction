@@ -24,7 +24,7 @@ The Prompt Grammar Correction Extension acts as a transparent layer between the 
 ### 2. 📚 Rich Vocabulary & Paraphrasing
 - **Weak $\rightarrow$ Strong Word Mapping**: Replaces vague adjectives (e.g., *"good"*, *"big"*) with precise, professional alternatives (e.g., *"exceptional"*, *"substantial"*).
 - **Professional Verbs**: Suggests formal alternatives for phrasal verbs (e.g., *"look at"* $\rightarrow$ *"analyze"*).
-- **Phrase Paraphrasing**: 
+- **Phrase Paraphrasing**:
   - **Professionalism**: *"I want you to"* $\rightarrow$ *"Please"*
   - **Conciseness**: *"in order to"* $\rightarrow$ *"to"*
   - **Impact**: *"at the end of the day"* $\rightarrow$ *"ultimately"*
@@ -69,16 +69,33 @@ The AI can call these tools to help the user refine their prompts:
 
 ---
 
-## ⚙️ Installation & Development
+## 📦 Installation
 
-### Quick Start
+### ⚡️ One-Line Installation
+The fastest way to use this extension is to load it directly via the GitHub URL:
+
 ```bash
-# Install dependencies
+pi -e https://raw.githubusercontent.com/naranyala/pi-ext-prompt-grammar-correction/main/src/index.ts
+```
+
+### 🛠️ Local Development Installation
+If you wish to modify the extension or run tests:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/naranyala/pi-ext-prompt-grammar-correction.git
+cd pi-ext-prompt-grammar-correction
+
+# 2. Install dependencies
 npm install
 
-# Run the extension locally
+# 3. Run the extension
 pi -e ./src/index.ts
 ```
+
+---
+
+## ⚙️ Development
 
 ### Project Structure
 - `src/index.ts`: Extension entry point and registration.
@@ -90,6 +107,7 @@ pi -e ./src/index.ts
 ```bash
 npm test
 ```
+
 
 ## 📄 License
 MIT
