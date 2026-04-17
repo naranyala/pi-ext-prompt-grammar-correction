@@ -71,14 +71,6 @@ The AI can call these tools to help the user refine their prompts:
 
 ## 📦 Installation
 
-### ⚡️ One-Line Installation
-The fastest way to use this extension is to load it directly via the GitHub URL:
-
-```bash
-pi -e https://raw.githubusercontent.com/naranyala/pi-ext-prompt-grammar-correction/main/src/index.ts
-```
-
-### 🛠️ Local Development Installation
 If you wish to modify the extension or run tests:
 
 ```bash
