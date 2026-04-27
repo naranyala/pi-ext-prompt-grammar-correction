@@ -108,17 +108,48 @@ describe("PromptGrammarFeature", () => {
       expect(result.details.hasIssues).toBe(true);
       expect(result.details.issueCount).toBe(1);
     });
+
+    it("should check homophones", async () => {
+      const tool = mockPi.__getTools().get("check_homophones");
+      const onUpdate = vi.fn();
+      const result = await tool.execute("call-1", { text: "Check their work" }, {}, onUpdate, mockCtx);
+      
+      expect(result.content[0].text).toContain("their");
+      expect(result.details.results).toHaveLength(1);
+    });
+
+    it("should improve prompt", async () => {
+      const tool = mockPi.__getTools().get("improve_prompt");
+      const onUpdate = vi.fn();
+      const result = await tool.execute("call-1", { text: "very good thing" }, {}, onUpdate, mockCtx);
+      
+      // "very good", "good", "thing"
+      expect(result.details.wordSuggestions).toHaveLength(3);
+      expect(result.details.styleAnalysis).toBeDefined();
+    });
+
+    it("should explain grammar", async () => {
+      const tool = mockPi.__getTools().get("explain_grammar");
+      const onUpdate = vi.fn();
+      const result = await tool.execute("call-1", { text: "I definately agree" }, {}, onUpdate, mockCtx);
+      
+      expect(result.content[0].text).toContain("definitely");
+      expect(result.details.typoCount).toBe(1);
+    });
+
+    it("should paraphrase prompt", async () => {
+      const tool = mockPi.__getTools().get("paraphrase_prompt");
+      const onUpdate = vi.fn();
+      const result = await tool.execute("call-1", { text: "I want you to help me" }, {}, onUpdate, mockCtx);
+      
+      expect(result.details.issueCount).toBeGreaterThan(0);
+    });
   });
 
   describe("Event Handlers", () => {
     it("should register 'before_agent_start' event", () => {
       const events = mockPi.__getEvents();
       expect(events.has("before_agent_start")).toBe(true);
-    });
-
-    it("should register 'session_start' event", () => {
-      const events = mockPi.__getEvents();
-      expect(events.has("session_start")).toBe(true);
     });
 
     it("should show suggestion when typo detected in prompt", async () => {
@@ -141,18 +172,6 @@ describe("PromptGrammarFeature", () => {
       await handler({ prompt: "I need help with coding" }, mockCtx);
       
       expect(mockCtx.ui.notify).not.toHaveBeenCalled();
-    });
-
-    it("should set widget on session_start", async () => {
-      const handlers = mockPi.__getEvents().get("session_start");
-      const handler = handlers[0];
-      
-      await handler({}, mockCtx);
-      
-      expect(mockCtx.ui.setWidget).toHaveBeenCalledWith(
-        "grammar-correction",
-        expect.arrayContaining(["✨ Grammar Correction Ready"])
-      );
     });
 
     it("should skip short prompts", async () => {

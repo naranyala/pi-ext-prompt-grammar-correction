@@ -350,12 +350,5 @@ export class PromptGrammarFeature extends Feature {
         _ctx.ui.notify(`📝 Grammar suggestions:\n${suggestions}`, "info");
       }
     });
-
-    this.ext.on("session_start", async (_event, ctx) => {
-      ctx.ui.setWidget("grammar-correction", [
-        "✨ Grammar Correction Ready",
-        this.enabled ? "✅ Enabled" : "❌ Disabled",
-      ]);
-    });
   }
 }

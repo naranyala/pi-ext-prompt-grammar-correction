@@ -1,156 +1,75 @@
 # Prompt Grammar Correction Extension
 
-## Project Status: COMPLETE ✅
+## Project Status: ACTIVE 🚀
 
-All 45 tests passing!
-
----
-
-## Impact Analysis: How This Extension Improves Pi-Mono
-
-### 1. User Experience Improvement
-
-| Aspect | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Prompt Quality** | Raw user prompts | Auto-corrected typos | ~50+ common mistakes detected |
-| **Learning** | No feedback | Real-time suggestions | Users learn from corrections |
-| **Communication** | Unclear prompts | Enhanced clarity | Better AI responses |
-| **Grammar Knowledge** | Silent failures | Educational notifications | Users improve English skills |
-
-### 2. Productivity Gains
-
-- **Time Saved**: No need to re-prompt due to typos
-- **Reduced Iterations**: Clearer prompts = better first-pass results
-- **Educational**: Passive learning of English grammar
-
-### 3. Feature Comparison
-
-| Feature | Status | Impact |
-|---------|--------|--------|
-| Typo Detection (50+ patterns) | ✅ | Catches common misspellings |
-| Homophones Detection (24+ rules) | ✅ NEW | Distinguishes confusing words |
-| Word Suggestions (20+ patterns) | ✅ NEW | Improves vocabulary |
-| Style Analysis | ✅ NEW | Passive voice, sentence structure |
-| Prompt Enhancer | ✅ NEW | Makes prompts more effective |
-| Mistake Tracking | ✅ NEW | Patterns over time |
-| Grammar Explainer | ✅ NEW | Educational context |
+A comprehensive extension for `pi-mono` that enhances prompt engineering through automated grammar correction, style analysis, and educational feedback.
 
 ---
 
-## Technical Improvements Applied
+## 🏗️ Codebase Structure & Abstraction
 
-### 1. PiWrapper Complete API Coverage
-- All ExtensionAPI methods exposed
-- Command wrapper with error handling
-- Tool registration simplified
+### 1. **Core Layer (`src/core`)**
+Modular foundation for building and extending the application.
+- **`PiExtension`**: Robust API wrapper for `pi-mono`. Simplifies tool registration and adds internal error handling.
+- **`Feature`**: Abstract base class for all extension modules.
+- **`FeatureRegistry`**: Central registration for features and third-party plugins.
 
-### 2. Grammar Module Extracted
-- Shared: `src/shared/grammar.ts`
-- 50+ typo patterns
-- 24+ homophones rules
-- 20+ word suggestions
-- Functions for analysis and correction
+### 2. **Grammar Engine (`src/shared`)**
+The "brain" of the extension, decoupled from the UI for testing and performance.
+- **`grammar.ts`**: Implements rule matching for 100+ patterns (typos, homophones, weak words, style).
+- **`types.ts`**: Shared TypeScript definitions.
 
-### 3. Test Suite
-- **Unit tests**: 21 tests
-- **Integration tests**: 23 tests
+### 3. **Features Layer (`src/features`)**
+Concrete implementations of user-facing functionality.
+- **`PromptGrammarFeature`**: Main feature that hooks into `before_agent_start` events and provides CLI commands/tools.
 
----
-
-## Extension Features
-
-### Commands
-```
-/grammar on              - Enable correction
-/grammar off             - Disable correction  
-/grammar suggestions     - Toggle suggestions
-/grammar stats           - Show correction count
-/grammar help            - Show usage
-/grammar homophones      - Check confusing words
-/grammar style           - Analyze style
-```
-
-### Tools (LLM-callable)
-- `correct_grammar` - Fix all grammar issues
-- `check_grammar` - Detect without fixing
-- `check_homophones` - Find confusing words (NEW)
-- `improve_prompt` - Enhance prompt effectiveness (NEW)
-- `analyze_style` - Style improvements (NEW)
-- `explain_grammar` - Educational explanations (NEW)
-
-### Auto-Detect
-- Watches `before_agent_start` event
-- Shows notification with suggestions
-- Preserves user intent
+### 4. **Entry Point (`src/index.ts`)**
+Bootstrap logic that initializes the `PiExtension` wrapper and registers all features via the `FeatureRegistry`.
 
 ---
 
-## New Features Breakdown
+## ✨ Features & Capabilities
 
-### 1. Homophones Detection
-```
-Detects: their/there/they're, your/you're, its/it's,
-         to/too/two, affect/effect, etc.
-Impact: Prevents 24+ common confusions
-```
+### ✅ Active Features
+- **Typo Correction (50+ patterns)**: Auto-detects and fixes common misspellings.
+- **Homophones Detection (24+ rules)**: Identifies confusing words (their/there/they're).
+- **Style Analysis**: Detects passive voice, long sentences, hedge words, and fillers.
+- **Word Suggestions**: Replaces weak words (good, bad, thing) with more professional alternatives.
+- **Professional Paraphrasing**: Suggests more concise and impactful phrasing for prompts.
+- **LLM Tools**: A suite of tools (`correct_grammar`, `improve_prompt`, `explain_grammar`, etc.) that the AI agent can call autonomously.
 
-### 2. Word Suggestions
-```
-Detects: very good → effective/beneficial,
-         bad → problematic/detrimental,
-         stuff → material/items
-Impact: More professional vocabulary
-```
-
-### 3. Style Analysis
-```
-Detects: Passive voice, long sentences,
-         weak words, unclear phrasing
-Impact: Better structured prompts
-```
-
-### 4. Prompt Enhancer
-```
-Analyzes: Context clarity, specificity,
-          Action words, Completeness
-Impact: More effective AI interactions
-```
-
-### 5. Mistake Tracker
-```
-Tracks: Common errors over time
-        Categories (typo, grammar, style)
-        Frequency patterns
-Impact: Personalized learning
-```
+### 🛠️ CLI Interface
+- `/grammar on|off`: Toggle auto-detection.
+- `/grammar stats`: View correction counters.
+- `/grammar help`: Detailed usage guide.
+- `/grammar style|homophones`: Direct triggers for specific analysis modules.
 
 ---
 
-## Test Results
+## ⚠️ Potential Issues & Technical Debt
 
-```
-45 pass
-0 fail
-229 expect() calls
-```
+### 1. **Performance Bottlenecks**
+- **Linear Regex Scanning**: Currently scans all 100+ patterns sequentially. While fast for small prompts, it scales linearly with the number of rules.
+- **No Caching**: Analysis is performed on every prompt, even if it hasn't changed (though `before_agent_start` only triggers once per turn).
+
+### 2. **Known Limitations (Potential Bugs)**
+- **Technical Jargon**: Regex-based typo detection may flag non-standard technical terms (e.g., "teh" might be intentional in some programming contexts).
+- **False Positives**: Homophones detection can be noisy if the user intentionally uses a specific variant for creative writing.
+- **No Multi-turn Context**: Grammar correction currently only looks at the *current* prompt, not the conversation history.
 
 ---
 
-## Next Steps
+## 🏗️ Future Architecture (Alternative Path)
 
-- [x] Extract grammar patterns
-- [x] Add unit tests
-- [x] Add integration tests
-- [x] Complete PiWrapper API
-- [x] Fix regex bugs
-- [x] Fix TypeScript build errors
-- [x] Update tsconfig.json (exclude examples/templates)
-- [x] Add homophones detection
-- [x] Add word suggestions
-- [x] Add style analysis
-- [x] Add prompt enhancer tool
-- [x] Add explainer tool
-- [x] Test extension: `pi -e ./src/index.ts` (Verified: Loads successfully)
-- [x] Run with real pi-mono session (Ready for user deployment)
-- [ ] (Optional) Explore LanguageTool API for advanced syntax checking
-- [ ] (Optional) Integrate Dictionary API for enhanced word suggestions
+To address the limitations above, we are exploring a high-performance **Native CLI Toolchain (Alternative)**:
+- [ ] **Rust Grammar Engine**: Rewrite the regex engine in Rust using Aho-Corasick for $O(n)$ pattern matching.
+- [ ] **WASM Integration**: Compile the Rust engine to WebAssembly for native execution speed within the JS environment.
+- [ ] **Deep NLP Integration**: Explore standalone binaries for full dependency parsing (Subject-Verb agreement).
+
+---
+
+## 🧪 Testing Coverage
+
+- **44 Tests Passing** (24 unit, 20 integration)
+- **Validated Tools**: `correct_grammar`, `check_grammar`, `check_homophones`, `improve_prompt`, `explain_grammar`, `paraphrase_prompt`.
+- **Validation Strategy**: Using a mock Pi-Mono context to verify event registration and UI notification side-effects.

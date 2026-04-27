@@ -18,16 +18,5 @@ export default async function (api: ExtensionAPI) {
     PromptGrammarFeature,
   ]);
 
-  // Global session start handler
-  api.on("session_start", async (_event, ctx) => {
-    ctx.ui.notify("Prompt Grammar Correction Extension Loaded! 🚀", "info");
-
-    // ctx.ui.setWidget("main-status", [
-    //   "📝 Grammar Correction Active",
-    //   "✅ Features initialized",
-    //   `📅 ${new Date().toLocaleDateString()}`,
-    // ]);
-
-    console.log("Prompt Grammar Correction Extension initialized successfully.");
-  });
+  console.log("Prompt Grammar Correction Extension initialized successfully.");
 }

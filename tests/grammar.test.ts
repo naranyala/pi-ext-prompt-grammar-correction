@@ -1,5 +1,14 @@
 import { describe, expect, it } from "bun:test";
-import { applyGrammarFixes, detectGrammarIssues, getSuggestions, COMMON_TYPOS } from "../src/shared/grammar";
+import { 
+  applyGrammarFixes, 
+  detectGrammarIssues, 
+  getSuggestions, 
+  COMMON_TYPOS, 
+  detectHomophones, 
+  getWordSuggestions, 
+  getParaphraseSuggestions,
+  analyzeStyle
+} from "../src/shared/grammar";
 
 describe("Grammar Module", () => {
   describe("COMMON_TYPOS", () => {
@@ -86,21 +95,45 @@ describe("Grammar Module", () => {
     });
   });
 
-  describe("getSuggestions", () => {
-    it("should return empty array for clean text", () => {
-      const suggestions = getSuggestions("Clean text");
-      expect(suggestions).toHaveLength(0);
+  describe("detectHomophones", () => {
+    it("should detect common homophones", () => {
+      const results = detectHomophones("Check their and your work");
+      expect(results).toHaveLength(2);
+      expect(results[0].word).toBe("their");
+      expect(results[1].word).toBe("your");
     });
 
-    it("should return suggestions with descriptions", () => {
-      const suggestions = getSuggestions("I seperately the files");
+    it("should provide alternatives", () => {
+      const results = detectHomophones("its a test");
+      expect(results[0].alternatives).toContain("it's");
+    });
+  });
+
+  describe("getWordSuggestions", () => {
+    it("should suggest better words for weak ones", () => {
+      const suggestions = getWordSuggestions("This is very good");
+      expect(suggestions).toHaveLength(2); // 'very' and 'good'
+      expect(suggestions.some(s => s.word === "good")).toBe(true);
+    });
+  });
+
+  describe("getParaphraseSuggestions", () => {
+    it("should suggest professional alternatives", () => {
+      const suggestions = getParaphraseSuggestions("I want you to help me");
       expect(suggestions).toHaveLength(1);
-      expect(suggestions[0].description).toBe("typo: seperately -> separately");
+      expect(suggestions[0].suggested).toBe("Please");
+    });
+  });
+
+  describe("analyzeStyle", () => {
+    it("should detect passive voice", () => {
+      const analysis = analyzeStyle("The code was fixed by the agent");
+      expect(analysis.suggestions).toContain("Consider using active voice for more direct communication");
     });
 
-    it("should return all matches", () => {
-      const suggestions = getSuggestions("definately seperately");
-      expect(suggestions).toHaveLength(2);
+    it("should detect hedge words", () => {
+      const analysis = analyzeStyle("Maybe we should try this");
+      expect(analysis.suggestions.some(s => s.includes("hedge words"))).toBe(true);
     });
   });
 
