@@ -38,13 +38,10 @@ The AI agent can autonomously call these tools to assist you:
 
 ---
 
-## 🚀 Quick Start
-
-### For Pi-Mono Users
-Simply load the extension directly in your Pi-Mono session:
+## 🚀 Installation
 
 ```bash
-git:github.com/naranyala/pi-ext-prompt-grammar-correction
+pi install git:github.com/naranyala/pi-ext-prompt-grammar-correction
 ```
 ---
 
